@@ -1,0 +1,31 @@
+<h2>Rectangle Creator</h2>
+<p>Count: <input id="count" value="5"></p>
+<button id="create">Create</button>
+<button id="cancel">Cancel</button>
+
+<button id="exportButton">Export Variables</button>
+<script>
+
+  document.getElementById('create').onclick = () => {
+    const textbox = document.getElementById('count');
+    const count = parseInt(textbox.value, 10);
+    parent.postMessage({ pluginMessage: { type: 'create-rectangles', count } }, '*')
+  }
+
+  document.getElementById('cancel').onclick = () => {
+    parent.postMessage({ pluginMessage: { type: 'cancel' } }, '*')
+  }
+
+  document.getElementById('exportButton').addEventListener('click', () => {
+    parent.postMessage({ pluginMessage: { type: 'getVariables' } }, '*');
+  });
+
+  onmessage = event => {
+    const message = event.data.pluginMessage;
+    if (message.type === 'variables') {
+      const variables = message.data;
+      // 在这里处理导出的变量信息
+      console.log(variables);
+    }
+  };
+</script>
